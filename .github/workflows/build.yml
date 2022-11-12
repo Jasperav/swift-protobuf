@@ -102,7 +102,11 @@ jobs:
     - name: Test SPM plugin
       working-directory: main
       run: make test-spm-plugin PROTOC=../protobuf/cmake_build/protoc
-
+    - name: Install stable cargo
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
   sanitizer_testing:
     runs-on: ubuntu-latest
     strategy:
