@@ -1,0 +1,39 @@
+name: BTest
+
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: main   
+      - name: Install protobuf
+        run: brew install protobuf
+      - name: Install custom Swift protobuf generator
+        # The swift build needs to run to create the protoc executable else cargo build will fail
+        run: |
+          cd ./main
+          swift build -c release
+      - name: Add protobuf to path
+        run: echo "$GITHUB_WORKSPACE/main/.build/release" >> $GITHUB_PATH
+      - name: Install stable cargo
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+      - name: B tests
+        working-directory: main
+        run: |
+          pwd
+          cd BTests
+          cargo build
+          cd GenTests
+          swift test

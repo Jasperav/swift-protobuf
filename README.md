@@ -1,3 +1,8 @@
+When updating this, also update firebase-ios-sdk with a FIXED tag, NOT master, just the latest tag and edit package.swift
+Than, generate the proto definitions, clean the build dir here, make sure it points to the correct dir:
+$ which protoc-gen-swift
+$ swift build -c release
+
 <img src="https://swift.org/assets/images/swift.svg" alt="Swift logo" height="70" >
 
 # Swift Protobuf
@@ -131,6 +136,7 @@ swift build -c release
 
 This will create a binary called `protoc-gen-swift` in the `.build/release`
 directory.
+To install, just copy this one executable into a directory that is part of your PATH environment variable. Else, the dir output dir to your PATH: https://www.architectryan.com/2012/10/02/add-to-the-path-on-mac-os-x-mountain-lion/ This looks something like: /Users/me/CLionProjects/swift-protobuf/.build/x86_64-apple-macosx/release
 
 To install, just copy this one executable into a directory that is
 part of your `PATH` environment variable.
