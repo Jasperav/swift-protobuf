@@ -5,7 +5,9 @@ name: Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - 'main'
+      - 'synccc'
   pull_request:
     branches: [ main ]
 
@@ -102,6 +104,19 @@ jobs:
     - name: Test SPM plugin
       working-directory: main
       run: make test-spm-plugin PROTOC=../protobuf/cmake_build/protoc
+    - name: Install stable cargo
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+    - name: B tests
+      working-directory: main
+      run: |
+        pwd
+        cd BTests
+        cargo build
+        cd GenTests
+        swift test
 
   sanitizer_testing:
     runs-on: ubuntu-latest

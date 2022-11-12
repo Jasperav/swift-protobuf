@@ -11,6 +11,22 @@
 import Foundation
 import SwiftProtobufPluginLibrary
 
+extension String {
+  func isRequiredField(swiftType: String) -> Bool {
+    if count <= 1 {
+      return true
+    }
+
+    if swiftType.contains("[") || swiftType == "Data" || swiftType == "String" {
+      return true
+    }
+
+    let secondChar = String(self[self.index(startIndex, offsetBy: 1)])
+
+    return !(hasPrefix("o") && secondChar.uppercased() == secondChar)
+  }
+}
+
 func splitPath(pathname: String) -> (dir:String, base:String, suffix:String) {
   var dir = ""
   var base = ""
