@@ -50,6 +50,8 @@ class GeneratorOptions {
   let protoToModuleMappings: ProtoFileToModuleMappings
   let visibility: Visibility
   let implementationOnlyImports: Bool
+  let uuids: Set<String>
+  let removeBoilerplateCode: Bool
 
   /// A string snippet to insert for the visibility
   let visibilitySourceSnippet: String
@@ -60,6 +62,8 @@ class GeneratorOptions {
     var visibility: Visibility = .internal
     var swiftProtobufModuleName: String? = nil
     var implementationOnlyImports: Bool = false
+    var uuids = Set<String>()
+    var removeBoilerplateCode = false
 
     for pair in parseParameter(string:parameter) {
       switch pair.key {
@@ -94,6 +98,14 @@ class GeneratorOptions {
         if let value = Bool(pair.value) {
           implementationOnlyImports = value
         }
+      case "Uuids":
+        let possibleSnakeCasedUuids = Set(Array(pair.value.split(separator: "|").map({ String($0) })))
+        for uuid in possibleSnakeCasedUuids {
+          uuids.insert(uuid)
+          uuids.insert(uuid.camelCased(with: "_"))
+        }
+      case "RemoveBoilerplateCode":
+        removeBoilerplateCode = Bool.init(pair.value) ?? false
       default:
         throw GenerationError.unknownParameter(name: pair.key)
       }
@@ -113,6 +125,8 @@ class GeneratorOptions {
 
     self.outputNaming = outputNaming
     self.visibility = visibility
+    self.uuids = uuids
+    self.removeBoilerplateCode = removeBoilerplateCode
 
     switch visibility {
     case .internal:
@@ -122,5 +136,15 @@ class GeneratorOptions {
     }
 
     self.implementationOnlyImports = implementationOnlyImports
+  }
+}
+
+extension String {
+  func camelCased(with separator: Character) -> String {
+    return lowercased()
+            .split(separator: separator)
+            .enumerated()
+            .map { $0.offset > 0 ? $0.element.capitalized : $0.element.lowercased() }
+            .joined()
   }
 }
