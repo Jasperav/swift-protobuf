@@ -1,3 +1,8 @@
+When updating this, also update firebase-ios-sdk with a FIXED tag, NOT master, just the latest tag and edit package.swift
+Than, generate the proto definitions, clean the build dir here, make sure it points to the correct dir:
+$ which protoc-gen-swift
+$ swift build -c release
+
 <img src="https://swift.org/assets/images/swift.svg" alt="Swift logo" height="70" >
 
 # Swift Protobuf
