@@ -14,6 +14,8 @@ fn main() {
 
     assert!(protos.exists());
 
+    let path = protos.to_str().unwrap();
+
     macro_rules! write {
         ($output: expr, $args: expr) => {
             let output_path = current_dir.join($output).join("Sources").join($output).join("protos");
@@ -26,15 +28,19 @@ fn main() {
 
             assert!(output_path.exists());
 
+            let output_path = output_path.to_str().unwrap();
+
             for proto in &protobuf_strict::protos() {
+                println!("Will generate a new proto, path: {:#?}, output_path: {:#?}, proto: {}", path, output_path, proto);
+
                 let status = Command::new("protoc")
-                    .arg(format!("--proto_path={}", protos.to_str().unwrap()))
-                    .arg(format!("--swift_out={}", output_path.to_str().unwrap()))
+                    .arg(format!("--proto_path={}", path))
+                    .arg(format!("--swift_out={}", output_path))
                     .arg("--swift_opt=Visibility=Public")
                     .arg(format!("{}.proto", proto))
                     .args(&$args)
                     .status()
-                    .unwrap();
+                    .expect("Failed to generate proto");
 
                 assert!(status.success());
             }
