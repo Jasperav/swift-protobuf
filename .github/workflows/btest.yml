@@ -18,6 +18,7 @@ jobs:
       - name: Install protobuf
         run: brew install protobuf
       - name: Install custom Swift protobuf generator
+        # The swift build needs to run to create the protoc executable else cargo build will fail
         run: |
           cd ./main
           swift build -c release
@@ -30,7 +31,6 @@ jobs:
           toolchain: stable
       - name: B tests
         working-directory: main
-        # The swift build needs to run to create the protoc executable else cargo build will fail
         run: |
           pwd
           cd BTests
