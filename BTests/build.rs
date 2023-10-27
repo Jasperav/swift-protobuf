@@ -1,6 +1,19 @@
+use std::path::Path;
 use std::process::Command;
 
 fn main() {
+    println!(
+        "Protoc: {:#?}",
+        Command::new("which").arg("protoc").output().unwrap()
+    );
+    println!(
+        "Protoc swift: {:#?}",
+        Command::new("which")
+            .arg("protoc-gen-swift")
+            .output()
+            .unwrap()
+    );
+
     let current_dir = std::env::current_dir().unwrap();
     let proto_dir = current_dir.join("src");
 
@@ -18,7 +31,11 @@ fn main() {
 
     macro_rules! write {
         ($output: expr, $args: expr) => {
-            let output_path = current_dir.join($output).join("Sources").join($output).join("protos");
+            let output_path = current_dir
+                .join($output)
+                .join("Sources")
+                .join($output)
+                .join("protos");
 
             println!("Output path is {:#?}", output_path);
 
@@ -31,13 +48,20 @@ fn main() {
             let output_path = output_path.to_str().unwrap();
 
             for proto in &protobuf_strict::protos() {
-                println!("Will generate a new proto, path: {:#?}, output_path: {:#?}, proto: {}", path, output_path, proto);
+                println!(
+                    "Will generate a new proto, path: {:#?}, output_path: {:#?}, proto: {}",
+                    path, output_path, proto
+                );
+
+                let proto = format!("{proto}.proto");
+
+                assert!(Path::new(path).join(&proto).exists());
 
                 let status = Command::new("protoc")
                     .arg(format!("--proto_path={}", path))
                     .arg(format!("--swift_out={}", output_path))
                     .arg("--swift_opt=Visibility=Public")
-                    .arg(format!("{}.proto", proto))
+                    .arg(&proto)
                     .args(&$args)
                     .status()
                     .expect("Failed to generate proto");
@@ -56,7 +80,7 @@ fn main() {
     let uuids: String = protobuf_strict::get_uuids().join("|");
     let args = [
         format!("--swift_opt=Uuids={}", uuids),
-        "--swift_opt=RemoveBoilerplateCode=true".to_string()
+        "--swift_opt=RemoveBoilerplateCode=true".to_string(),
     ];
 
     write!("bgenerated", args);
