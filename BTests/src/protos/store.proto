@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-package stores;
-
-enum Store {
-  WALMART = 0;
-}
