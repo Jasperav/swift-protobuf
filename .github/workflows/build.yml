@@ -111,8 +111,10 @@ jobs:
         toolchain: stable
     - name: B tests
       working-directory: main
+      # The swift build needs to run to create the protoc executable else cargo build will fail
       run: |
         pwd
+        swift build -c release
         cd BTests
         cargo build
         cd GenTests
