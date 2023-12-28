@@ -65,7 +65,7 @@ public enum BinaryDelimited {
   ///           `BinaryDelimited.Error` for some writing errors, or the
   ///           underlying `OutputStream.streamError` for a stream error.
   public static func serialize(
-    message: Message,
+    message: any Message,
     to stream: OutputStream,
     partial: Bool = false
   ) throws {
@@ -74,10 +74,8 @@ public enum BinaryDelimited {
     let totalSize = Varint.encodedSize(of: UInt64(serialized.count)) + serialized.count
     var bytes: [UInt8] = Array(repeating: 0, count: totalSize)
     bytes.withUnsafeMutableBytes { (body: UnsafeMutableRawBufferPointer) in
-      if let baseAddress = body.baseAddress, body.count > 0 {
-        var encoder = BinaryEncoder(forWritingInto: baseAddress)
-        encoder.putBytesValue(value: serialized)
-      }
+      var encoder = BinaryEncoder(forWritingInto: body)
+      encoder.putBytesValue(value: serialized)
     }
 
     var written: Int = 0
@@ -127,7 +125,7 @@ public enum BinaryDelimited {
   public static func parse<M: Message>(
     messageType: M.Type,
     from stream: InputStream,
-    extensions: ExtensionMap? = nil,
+    extensions: (any ExtensionMap)? = nil,
     partial: Bool = false,
     options: BinaryDecodingOptions = BinaryDecodingOptions()
   ) throws -> M {
@@ -168,7 +166,7 @@ public enum BinaryDelimited {
   public static func merge<M: Message>(
     into message: inout M,
     from stream: InputStream,
-    extensions: ExtensionMap? = nil,
+    extensions: (any ExtensionMap)? = nil,
     partial: Bool = false,
     options: BinaryDecodingOptions = BinaryDecodingOptions()
   ) throws {

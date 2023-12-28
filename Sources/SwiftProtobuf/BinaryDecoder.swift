@@ -33,7 +33,7 @@ internal struct BinaryDecoder: Decoder {
     // Field number for last-parsed field tag
     private var fieldNumber: Int = 0
     // Collection of extension fields for this decode
-    private var extensions: ExtensionMap?
+    private var extensions: (any ExtensionMap)?
     // The current group number. See decodeFullGroup(group:fieldNumber:) for how
     // this is used.
     private var groupFieldNumber: Int?
@@ -54,7 +54,7 @@ internal struct BinaryDecoder: Decoder {
       forReadingFrom pointer: UnsafeRawPointer,
       count: Int,
       options: BinaryDecodingOptions,
-      extensions: ExtensionMap? = nil
+      extensions: (any ExtensionMap)? = nil
     ) {
         // Assuming baseAddress is not nil.
         p = pointer
@@ -912,13 +912,11 @@ internal struct BinaryDecoder: Decoder {
                 let fieldSize = Varint.encodedSize(of: fieldTag.rawValue) + Varint.encodedSize(of: Int64(bodySize)) + bodySize
                 var field = Data(count: fieldSize)
                 field.withUnsafeMutableBytes { (body: UnsafeMutableRawBufferPointer) in
-                  if let baseAddress = body.baseAddress, body.count > 0 {
-                    var encoder = BinaryEncoder(forWritingInto: baseAddress)
-                    encoder.startField(tag: fieldTag)
-                    encoder.putVarInt(value: Int64(bodySize))
-                    for v in extras {
-                        encoder.putVarInt(value: Int64(v))
-                    }
+                  var encoder = BinaryEncoder(forWritingInto: body)
+                  encoder.startField(tag: fieldTag)
+                  encoder.putVarInt(value: Int64(bodySize))
+                  for v in extras {
+                      encoder.putVarInt(value: Int64(v))
                   }
                 }
                 unknownOverride = field
@@ -1128,7 +1126,7 @@ internal struct BinaryDecoder: Decoder {
 
     internal mutating func decodeExtensionField(
       values: inout ExtensionFieldValueSet,
-      messageType: Message.Type,
+      messageType: any Message.Type,
       fieldNumber: Int
     ) throws {
         if let ext = extensions?[messageType, fieldNumber] {
@@ -1142,9 +1140,9 @@ internal struct BinaryDecoder: Decoder {
     /// Helper to reuse between Extension decoding and MessageSet Extension decoding.
     private mutating func decodeExtensionField(
       values: inout ExtensionFieldValueSet,
-      messageType: Message.Type,
+      messageType: any Message.Type,
       fieldNumber: Int,
-      messageExtension ext: AnyMessageExtension
+      messageExtension ext: any AnyMessageExtension
     ) throws {
         assert(!consumed)
         assert(fieldNumber == ext.fieldNumber)
@@ -1169,7 +1167,7 @@ internal struct BinaryDecoder: Decoder {
 
     internal mutating func decodeExtensionFieldsAsMessageSet(
       values: inout ExtensionFieldValueSet,
-      messageType: Message.Type
+      messageType: any Message.Type
     ) throws {
         // Spin looking for the Item group, everything else will end up in unknown fields.
         while let fieldNumber = try self.nextFieldNumber() {
@@ -1213,14 +1211,14 @@ internal struct BinaryDecoder: Decoder {
 
     private mutating func decodeMessageSetItem(
       values: inout ExtensionFieldValueSet,
-      messageType: Message.Type
+      messageType: any Message.Type
     ) throws -> DecodeMessageSetItemResult {
         // This is loosely based on the C++:
         //   ExtensionSet::ParseMessageSetItem()
         //   WireFormat::ParseAndMergeMessageSetItem()
         // (yes, there have two versions that are almost the same)
 
-        var msgExtension: AnyMessageExtension?
+      var msgExtension: (any AnyMessageExtension)?
         var fieldData: Data?
 
         // In this loop, if wire types are wrong, things don't decode,
@@ -1251,7 +1249,7 @@ internal struct BinaryDecoder: Decoder {
                         extDecoder.fieldWireFormat = .lengthDelimited
                         try extDecoder.decodeExtensionField(values: &values,
                                                             messageType: messageType,
-                                                            fieldNumber: fieldNumber,
+                                                            fieldNumber: ext.fieldNumber,
                                                             messageExtension: ext)
                         wasDecoded = extDecoder.consumed
                       }
@@ -1285,10 +1283,8 @@ internal struct BinaryDecoder: Decoder {
                         let payloadSize = Varint.encodedSize(of: Int64(data.count)) + data.count
                         var payload = Data(count: payloadSize)
                         payload.withUnsafeMutableBytes { (body: UnsafeMutableRawBufferPointer) in
-                          if let baseAddress = body.baseAddress, body.count > 0 {
-                            var encoder = BinaryEncoder(forWritingInto: baseAddress)
-                            encoder.putBytesValue(value: data)
-                          }
+                          var encoder = BinaryEncoder(forWritingInto: body)
+                          encoder.putBytesValue(value: data)
                         }
                         fieldData = payload
                     } else {
@@ -1487,21 +1483,15 @@ internal struct BinaryDecoder: Decoder {
     private mutating func decodeFloat() throws -> Float {
         var littleEndianBytes: UInt32 = 0
         try decodeFourByteNumber(value: &littleEndianBytes)
-        var nativeEndianBytes = UInt32(littleEndian: littleEndianBytes)
-        var float: Float = 0
-        let n = MemoryLayout<Float>.size
-        memcpy(&float, &nativeEndianBytes, n)
-        return float
+        let nativeEndianBytes = UInt32(littleEndian: littleEndianBytes)
+        return Float(bitPattern: nativeEndianBytes)
     }
 
     private mutating func decodeDouble() throws -> Double {
         var littleEndianBytes: UInt64 = 0
         try decodeEightByteNumber(value: &littleEndianBytes)
-        var nativeEndianBytes = UInt64(littleEndian: littleEndianBytes)
-        var double: Double = 0
-        let n = MemoryLayout<Double>.size
-        memcpy(&double, &nativeEndianBytes, n)
-        return double
+        let nativeEndianBytes = UInt64(littleEndian: littleEndianBytes)
+        return Double(bitPattern: nativeEndianBytes)
     }
 
     /// Private: Get the start and length for the body of
