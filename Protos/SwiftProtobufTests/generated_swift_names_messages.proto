@@ -89,7 +89,6 @@ message GeneratedSwiftReservedMessages {
   message clearDeprecatedLegacyJsonFieldConflicts { int32 clearDeprecatedLegacyJsonFieldConflicts = 1; }
   message clearDoubleValue { int32 clearDoubleValue = 1; }
   message clearEdition { int32 clearEdition = 1; }
-  message clearEditionEnum { int32 clearEditionEnum = 1; }
   message clearEnd { int32 clearEnd = 1; }
   message clearEnumType { int32 clearEnumType = 1; }
   message clearExtendee { int32 clearExtendee = 1; }
@@ -116,11 +115,9 @@ message GeneratedSwiftReservedMessages {
   message clearLeadingComments { int32 clearLeadingComments = 1; }
   message clearMapEntry { int32 clearMapEntry = 1; }
   message clearMaximumEdition { int32 clearMaximumEdition = 1; }
-  message clearMaximumEditionEnum { int32 clearMaximumEditionEnum = 1; }
   message clearMessageEncoding { int32 clearMessageEncoding = 1; }
   message clearMessageSetWireFormat { int32 clearMessageSetWireFormat = 1; }
   message clearMinimumEdition { int32 clearMinimumEdition = 1; }
-  message clearMinimumEditionEnum { int32 clearMinimumEditionEnum = 1; }
   message clearName { int32 clearName = 1; }
   message clearNamePart { int32 clearNamePart = 1; }
   message clearNegativeIntValue { int32 clearNegativeIntValue = 1; }
@@ -158,6 +155,7 @@ message GeneratedSwiftReservedMessages {
   message clearType { int32 clearType = 1; }
   message clearTypeName { int32 clearTypeName = 1; }
   message clearUnverifiedLazy { int32 clearUnverifiedLazy = 1; }
+  message clearUtf8Validation { int32 clearUtf8Validation = 1; }
   message clearValue { int32 clearValue = 1; }
   message clearVerification { int32 clearVerification = 1; }
   message clearWeak { int32 clearWeak = 1; }
@@ -167,6 +165,7 @@ message GeneratedSwiftReservedMessages {
   message Collection { int32 Collection = 1; }
   message com { int32 com = 1; }
   message comma { int32 comma = 1; }
+  message CommonMessageConformances { int32 CommonMessageConformances = 1; }
   message consumedBytes { int32 consumedBytes = 1; }
   message contentsOf { int32 contentsOf = 1; }
   message count { int32 count = 1; }
@@ -174,7 +173,6 @@ message GeneratedSwiftReservedMessages {
   message csharpNamespace { int32 csharpNamespace = 1; }
   message ctype { int32 ctype = 1; }
   message customCodable { int32 customCodable = 1; }
-  message CustomDebugStringConvertible { int32 CustomDebugStringConvertible = 1; }
   message d { int32 d = 1; }
   message Data { int32 Data = 1; }
   message dataResult { int32 dataResult = 1; }
@@ -249,22 +247,19 @@ message GeneratedSwiftReservedMessages {
   message digitValue { int32 digitValue = 1; }
   message discardableResult { int32 discardableResult = 1; }
   message discardUnknownFields { int32 discardUnknownFields = 1; }
-  message distance { int32 distance = 1; }
-  message double { int32 double = 1; }
+  message Double { int32 Double = 1; }
   message doubleValue { int32 doubleValue = 1; }
   message Duration { int32 Duration = 1; }
   message E { int32 E = 1; }
   message edition { int32 edition = 1; }
   message EditionDefault { int32 EditionDefault = 1; }
   message editionDefaults { int32 editionDefaults = 1; }
-  message editionEnum { int32 editionEnum = 1; }
   message Element { int32 Element = 1; }
   message elements { int32 elements = 1; }
   message emitExtensionFieldName { int32 emitExtensionFieldName = 1; }
   message emitFieldName { int32 emitFieldName = 1; }
   message emitFieldNumber { int32 emitFieldNumber = 1; }
   message Empty { int32 Empty = 1; }
-  message emptyData { int32 emptyData = 1; }
   message encodeAsBytes { int32 encodeAsBytes = 1; }
   message encoded { int32 encoded = 1; }
   message encodedJSONString { int32 encodedJSONString = 1; }
@@ -333,7 +328,7 @@ message GeneratedSwiftReservedMessages {
   message final { int32 final = 1; }
   message first { int32 first = 1; }
   message firstItem { int32 firstItem = 1; }
-  message float { int32 float = 1; }
+  message Float { int32 Float = 1; }
   message floatLiteral { int32 floatLiteral = 1; }
   message FloatLiteralType { int32 FloatLiteralType = 1; }
   message FloatValue { int32 FloatValue = 1; }
@@ -427,7 +422,6 @@ message GeneratedSwiftReservedMessages {
   message hasDeprecatedLegacyJsonFieldConflicts { int32 hasDeprecatedLegacyJsonFieldConflicts = 1; }
   message hasDoubleValue { int32 hasDoubleValue = 1; }
   message hasEdition { int32 hasEdition = 1; }
-  message hasEditionEnum { int32 hasEditionEnum = 1; }
   message hasEnd { int32 hasEnd = 1; }
   message hasEnumType { int32 hasEnumType = 1; }
   message hasExtendee { int32 hasExtendee = 1; }
@@ -458,11 +452,9 @@ message GeneratedSwiftReservedMessages {
   message hasLeadingComments { int32 hasLeadingComments = 1; }
   message hasMapEntry { int32 hasMapEntry = 1; }
   message hasMaximumEdition { int32 hasMaximumEdition = 1; }
-  message hasMaximumEditionEnum { int32 hasMaximumEditionEnum = 1; }
   message hasMessageEncoding { int32 hasMessageEncoding = 1; }
   message hasMessageSetWireFormat { int32 hasMessageSetWireFormat = 1; }
   message hasMinimumEdition { int32 hasMinimumEdition = 1; }
-  message hasMinimumEditionEnum { int32 hasMinimumEditionEnum = 1; }
   message hasName { int32 hasName = 1; }
   message hasNamePart { int32 hasNamePart = 1; }
   message hasNegativeIntValue { int32 hasNegativeIntValue = 1; }
@@ -500,6 +492,7 @@ message GeneratedSwiftReservedMessages {
   message hasType { int32 hasType = 1; }
   message hasTypeName { int32 hasTypeName = 1; }
   message hasUnverifiedLazy { int32 hasUnverifiedLazy = 1; }
+  message hasUtf8Validation { int32 hasUtf8Validation = 1; }
   message hasValue { int32 hasValue = 1; }
   message hasVerification { int32 hasVerification = 1; }
   message hasWeak { int32 hasWeak = 1; }
@@ -593,11 +586,9 @@ message GeneratedSwiftReservedMessages {
   message MapValueType { int32 MapValueType = 1; }
   message mapVisitor { int32 mapVisitor = 1; }
   message maximumEdition { int32 maximumEdition = 1; }
-  message maximumEditionEnum { int32 maximumEditionEnum = 1; }
   message mdayStart { int32 mdayStart = 1; }
   message merge { int32 merge = 1; }
   message message { int32 message = 1; }
-  message MessageBase { int32 MessageBase = 1; }
   message messageDepthLimit { int32 messageDepthLimit = 1; }
   message messageEncoding { int32 messageEncoding = 1; }
   message MessageExtension { int32 MessageExtension = 1; }
@@ -613,7 +604,6 @@ message GeneratedSwiftReservedMessages {
   message methods { int32 methods = 1; }
   message min { int32 min = 1; }
   message minimumEdition { int32 minimumEdition = 1; }
-  message minimumEditionEnum { int32 minimumEditionEnum = 1; }
   message minor { int32 minor = 1; }
   message Mixin { int32 Mixin = 1; }
   message mixins { int32 mixins = 1; }
@@ -629,7 +619,6 @@ message GeneratedSwiftReservedMessages {
   message NamePart { int32 NamePart = 1; }
   message names { int32 names = 1; }
   message nanos { int32 nanos = 1; }
-  message nativeEndianBytes { int32 nativeEndianBytes = 1; }
   message negativeIntValue { int32 negativeIntValue = 1; }
   message nestedType { int32 nestedType = 1; }
   message newL { int32 newL = 1; }
@@ -683,7 +672,6 @@ message GeneratedSwiftReservedMessages {
   message phpGenericServices { int32 phpGenericServices = 1; }
   message phpMetadataNamespace { int32 phpMetadataNamespace = 1; }
   message phpNamespace { int32 phpNamespace = 1; }
-  message pointer { int32 pointer = 1; }
   message pos { int32 pos = 1; }
   message positiveIntValue { int32 positiveIntValue = 1; }
   message prefix { int32 prefix = 1; }
@@ -880,7 +868,6 @@ message GeneratedSwiftReservedMessages {
   message UnsafeBufferPointer { int32 UnsafeBufferPointer = 1; }
   message UnsafeMutablePointer { int32 UnsafeMutablePointer = 1; }
   message UnsafeMutableRawBufferPointer { int32 UnsafeMutableRawBufferPointer = 1; }
-  message UnsafeMutableRawPointer { int32 UnsafeMutableRawPointer = 1; }
   message UnsafeRawBufferPointer { int32 UnsafeRawBufferPointer = 1; }
   message UnsafeRawPointer { int32 UnsafeRawPointer = 1; }
   message unverifiedLazy { int32 unverifiedLazy = 1; }
@@ -890,6 +877,7 @@ message GeneratedSwiftReservedMessages {
   message utf8 { int32 utf8 = 1; }
   message utf8Ptr { int32 utf8Ptr = 1; }
   message utf8ToDouble { int32 utf8ToDouble = 1; }
+  message utf8Validation { int32 utf8Validation = 1; }
   message UTF8View { int32 UTF8View = 1; }
   message v { int32 v = 1; }
   message value { int32 value = 1; }

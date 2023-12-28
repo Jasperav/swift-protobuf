@@ -31,7 +31,7 @@
 ///
 /// The actual functionality is implemented either in the generated code or in
 /// default implementations of the below methods and properties.
-public protocol Message: _MessageBase {
+public protocol Message: _CommonMessageConformances {
   /// Creates a new message with all of its fields initialized to their default
   /// values.
   init()
@@ -109,13 +109,14 @@ public protocol Message: _MessageBase {
   /// Helper to compare `Message`s when not having a specific type to use
   /// normal `Equatable`. `Equatable` is provided with specific generated
   /// types.
-  func isEqualTo(message: Message) -> Bool
+  func isEqualTo(message: any Message) -> Bool
 }
 
 #if DEBUG
-public protocol _MessageBase: Sendable, CustomDebugStringConvertible {}
+public typealias _CommonMessageConformances =
+  Sendable & CustomDebugStringConvertible
 #else
-public protocol _MessageBase: Sendable {}
+public typealias _CommonMessageConformances = Sendable
 #endif
 
 extension Message {
@@ -188,7 +189,7 @@ public protocol _MessageImplementationBase: Message, Hashable {
 }
 
 extension _MessageImplementationBase {
-  public func isEqualTo(message: Message) -> Bool {
+  public func isEqualTo(message: any Message) -> Bool {
     guard let other = message as? Self else {
       return false
     }

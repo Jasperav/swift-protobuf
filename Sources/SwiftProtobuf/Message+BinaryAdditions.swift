@@ -53,13 +53,11 @@ extension Message {
 
     var data = Bytes(repeating: 0, count: requiredSize)
     try data.withUnsafeMutableBytes { (body: UnsafeMutableRawBufferPointer) in
-      if let baseAddress = body.baseAddress, body.count > 0 {
-        var visitor = BinaryEncodingVisitor(forWritingInto: baseAddress, options: options)
-        try traverse(visitor: &visitor)
-        // Currently not exposing this from the api because it really would be
-        // an internal error in the library and should never happen.
-        assert(requiredSize == visitor.encoder.distance(pointer: baseAddress))
-      }
+      var visitor = BinaryEncodingVisitor(forWritingInto: body, options: options)
+      try traverse(visitor: &visitor)
+      // Currently not exposing this from the api because it really would be
+      // an internal error in the library and should never happen.
+      assert(visitor.encoder.remainder.count == 0)
     }
     return data
   }
@@ -93,7 +91,7 @@ extension Message {
   @inlinable
   public init<Bytes: SwiftProtobufContiguousBytes>(
     serializedBytes bytes: Bytes,
-    extensions: ExtensionMap? = nil,
+    extensions: (any ExtensionMap)? = nil,
     partial: Bool = false,
     options: BinaryDecodingOptions = BinaryDecodingOptions()
   ) throws {
@@ -123,7 +121,7 @@ extension Message {
   @inlinable
   public mutating func merge<Bytes: SwiftProtobufContiguousBytes>(
     serializedBytes bytes: Bytes,
-    extensions: ExtensionMap? = nil,
+    extensions: (any ExtensionMap)? = nil,
     partial: Bool = false,
     options: BinaryDecodingOptions = BinaryDecodingOptions()
   ) throws {
@@ -139,7 +137,7 @@ extension Message {
   @usableFromInline
   internal mutating func _merge(
     rawBuffer body: UnsafeRawBufferPointer,
-    extensions: ExtensionMap?,
+    extensions: (any ExtensionMap)?,
     partial: Bool,
     options: BinaryDecodingOptions
   ) throws {
